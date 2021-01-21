@@ -3,7 +3,7 @@
 PyTorch code for the experiments of Deep Energy-based Set Prediction (DESP) and some baselines.
 DESP circumvents the requirement for assignment-based set losses as training objectives (e.g. Hungarian loss) and gains several advantages thereby.
 
-For details see [Set Prediction without Imposing Structure as Conditional Density Estimation](https://github.com/davzha/DESP) by David Zhang, Gertjan Burghouts, and Cees Snoek.
+For details see [Set Prediction without Imposing Structure as Conditional Density Estimation](https://arxiv.org/abs/2010.04109) by David Zhang, Gertjan Burghouts, and Cees Snoek.
 
 # BibTeX entry
 
