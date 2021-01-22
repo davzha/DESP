@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from loss import chamfer_distance, LAP_loss
 from modules import ConvEncoder, FSEncoder, L1Energy
-from plot import plot_set
+from plot import plot_rect
 from gradient_iterators import langevin_sample
 from utils import time_print
 
@@ -88,8 +88,10 @@ class Model(nn.Module):
 
         if self.global_step % self.cfg.log.plt_freq == 0:
             try:
-                plot_set(batch[1][...,:3], filepath=self.cfg.log.misc_dir / f"{self.global_step}_gt.png", n_sets=self.cfg.train.batch_size)
-                plot_set(y_T[...,:3], filepath=self.cfg.log.misc_dir / f"{self.global_step}_samples.png", fontsize=27, n_sets=self.cfg.train.batch_size)
+                plot_rect(batch[1], batch[0], n_sets=16,
+                    filepath=self.cfg.log.misc_dir / f"{self.global_step}_gt.png")
+                plot_rect(y_T, batch[0], n_sets=16,
+                    filepath=self.cfg.log.misc_dir / f"{self.global_step}_samples.png")
             except Exception as e:
                 time_print(f"Error while plotting: {e}")
 
@@ -109,8 +111,10 @@ class Model(nn.Module):
             report["performance"] = LAP_loss(batch[1].to(self.device), y_T, pool=self.pool).mean(0)
 
         if batch_nb == 0:
-            plot_set(batch[1], filepath=self.cfg.log.misc_dir / f"{self.global_step}_{mode}_gt.png", n_sets=self.cfg.test.batch_size)
-            plot_set(y_T, filepath=self.cfg.log.misc_dir / f"{self.global_step}_{mode}_samples.png", n_sets=self.cfg.test.batch_size)
+            plot_rect(batch[1], batch[0], n_sets=16,
+                    filepath=self.cfg.log.misc_dir / f"{self.global_step}_{mode}_gt.png")
+            plot_rect(y_T, batch[0], n_sets=16,
+                    filepath=self.cfg.log.misc_dir / f"{self.global_step}_{mode}_samples.png")
         return report
 
     def configure_optimizer(self):
