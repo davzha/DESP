@@ -82,7 +82,6 @@ def test(cfg, data_loader, model):
         if batch_nb % cfg.log.freq == 0 or batch_nb == len(data_loader) - 1:
             progress.display(batch_nb, print_fn=lambda *x: time_print(*x, end="\r"))
 
-
     writer.add_scalar("loss/test", losses.avg, global_step)
     writer.add_scalar("time/batch/test", batch_time.avg, global_step)
     writer.add_scalar("time/data/test", data_time.avg, global_step)
@@ -153,7 +152,6 @@ if __name__ == "__main__":
     writer = SummaryWriter(
         log_dir=config.log.tb_dir,
         comment=f"{config.description}, {git_state}")
-
 
     time_print(pprint.pformat(config))
     time_print(f"Git head at state: {git_state}")

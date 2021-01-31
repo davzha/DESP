@@ -2,6 +2,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn.modules.activation import Sigmoid
 import torchvision 
 
 
@@ -60,7 +61,7 @@ def get_mlp(d_in, d_hid, d_out, n_layers):
             d_in if i == 0 else d_hid, 
             d_hid if i < n_layers - 1 else d_out))
         if i < n_layers - 1:
-            layers.append(nn.ReLU(inplace=True))
+            layers.append(nn.LeakyReLU(inplace=True))
     return nn.Sequential(*layers)
 
 
@@ -173,7 +174,8 @@ class PretrainedConvEncoder(nn.Module):
         self.end = nn.Sequential(
             nn.Linear(512, 256),
             nn.LeakyReLU(),
-            nn.Linear(256, d_out)
+            nn.Linear(256, d_out),
+            nn.Sigmoid()
         )
 
     def forward(self, x):

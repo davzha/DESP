@@ -21,9 +21,9 @@ def train(cfg, data_loader, model):
         len(data_loader)-1,
         [batch_time, data_time, losses],
         prefix=f"Train:\t")
-
+    
     model.train()
-
+    
     end = time.time()
     for batch_nb, batch in enumerate(data_loader):
         d_time = time.time() - end
@@ -33,7 +33,6 @@ def train(cfg, data_loader, model):
         writer.add_scalar("time/data/train", d_time, global_step)
 
         report = model.training_step(batch, batch_nb)
-
         losses.update(report["loss"])
 
         for k, v in report.items():
@@ -50,13 +49,12 @@ def train(cfg, data_loader, model):
 def eval(cfg, data_loader, model, mode="test"):
     data_time = AverageMeter("Data", ":6.3f")
     batch_time = AverageMeter("Time", ":6.3f")
-    losses = AverageMeter("Loss", ":.4e")
     metrics = ["performance"]
     metrics = {m: AverageMeter(m, ":.4e") for m in metrics}
 
     progress = ProgressMeter(
         len(data_loader)-1,
-        [batch_time, data_time, losses, *metrics.values()],
+        [batch_time, data_time, *metrics.values()],
         prefix=f"{mode.capitalize()}:\t")
 
     model.eval()
@@ -68,8 +66,6 @@ def eval(cfg, data_loader, model, mode="test"):
         data_time.update(time.time() - end)
         with torch.no_grad():
             report = model.eval_step(batch, batch_nb, mode=mode)
-        
-        losses.update(report["loss"])
 
         for k, v in report.items():
             if k not in metrics:
@@ -82,8 +78,6 @@ def eval(cfg, data_loader, model, mode="test"):
         if batch_nb % cfg.log.freq == 0 or batch_nb == len(data_loader) - 1:
             progress.display(batch_nb, print_fn=lambda *x: time_print(*x, end="\r"))
 
-
-    writer.add_scalar(f"loss/{mode}", losses.avg, global_step)
     writer.add_scalar(f"time/batch/{mode}", batch_time.avg, global_step)
     writer.add_scalar(f"time/data/{mode}", data_time.avg, global_step)
 
@@ -113,6 +107,8 @@ def main(cfg, pool=None):
     best_val_score = np.inf
     early_stopping_count = 0
 
+    val_compare = lambda c,b:c < b if cfg.val_compare == "less" else lambda c,b:c > b
+
     for epoch in range(cfg.num_epoch):
         time_print(f"\nEpoch {epoch} Training")
         train(cfg, train_loader, model)
@@ -136,7 +132,7 @@ def main(cfg, pool=None):
             directory=cfg.log.misc_dir,
             filename=filename)
         
-        if val_score < best_val_score:
+        if val_compare(val_score, best_val_score):
             best_val_score = val_score
             early_stopping_count = 0
         elif early_stopping_count < cfg.early_stopping:
@@ -172,7 +168,6 @@ if __name__ == "__main__":
     writer = SummaryWriter(
         log_dir=config.log.tb_dir,
         comment=f"{config.description}, {git_state}")
-
 
     time_print(pprint.pformat(config))
     time_print(f"Git head at state: {git_state}")

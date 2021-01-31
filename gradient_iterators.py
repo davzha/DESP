@@ -2,11 +2,23 @@ import torch
 import torch.nn as nn
 
 
-def langevin_sample(energy_fn, x, n_points, d_y, T, S, eps, device="cuda"):
+def langevin_sample(energy_fn, x, set_size, d_y, T, S, eps, k=1, device="cuda"):
     """Also used for prediction, by setting S < T.
+    Args:
+        energy_fn: callable; deep energy function
+        x: input features
+        set_size: set size of y
+        d_y: num features of y
+        T: num total iterations
+        S: num sample iterations
+        eps: noise coefficient
+        k: num samplese
     """
+    if k > 1:
+        x = x.repeat_interleave(k, dim=0)
+
     batch_size = x.size(0)
-    y_t = torch.zeros(batch_size, n_points, d_y, device=device)
+    y_t = torch.zeros(batch_size, set_size, d_y, device=device)
 
     energies = []
     gradnorm = torch.zeros(1, device=device, requires_grad=False)

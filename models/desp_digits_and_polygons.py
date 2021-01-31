@@ -68,7 +68,7 @@ class Model(nn.Module):
         y_T, report = langevin_sample(
             self.energy_fn, 
             x,
-            n_points=targets.size(1),
+            set_size=targets.size(1),
             d_y=self.cfg.energy_fn.d_y,
             **cfg_sample,
             device=self.device)

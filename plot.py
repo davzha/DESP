@@ -143,9 +143,9 @@ def gather_patch(points, thr):
 
 
 def plot_imgs(imgs, filepath=None, labels=None, n_imgs=100, title=None, 
-             thr=0.2, figsize=(3,3), point_size=1e2, fontsize=20, opacity=0.3,
-             rows=None, cols=None, row_labels=None, col_labels=None, rl_fs=24, cl_fs=24,
-             sub_colors=None, sub_linewidth=None, sub_linestyle=None):
+              figsize=(3,3), fontsize=20,
+              rows=None, cols=None, row_labels=None, col_labels=None, rl_fs=24, cl_fs=24,
+              sub_colors=None, sub_linewidth=None, sub_linestyle=None):
     batch_size, n_channels, width, height = imgs.shape
 
     imgs = imgs.permute(0,2,3,1)

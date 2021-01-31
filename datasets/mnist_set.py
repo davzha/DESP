@@ -52,7 +52,7 @@ class MNISTSet(torch.utils.data.Dataset):
         return data
 
     def image_to_set(self, img):
-        idx = (img.squeeze(0) > self.threshold).nonzero()
+        idx = torch.nonzero((img.squeeze(0) > self.threshold))
         cardinality = idx.size(0)
         return idx, cardinality
 
