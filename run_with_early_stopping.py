@@ -82,7 +82,7 @@ def eval(cfg, data_loader, model, mode="test"):
     writer.add_scalar(f"time/data/{mode}", data_time.avg, global_step)
 
     for k,v in metrics.items():
-        writer.add_scalar(f"{k}/test", v.avg, global_step)
+        writer.add_scalar(f"{k}/{mode}", v.avg, global_step)
 
     progress.display(len(data_loader) - 1, time_print)
 
