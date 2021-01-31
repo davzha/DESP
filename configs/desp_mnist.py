@@ -18,6 +18,7 @@ config.n_process_pool = 0
 config.model = "desp_auto_encoder"
 config.early_stopping = 7
 config.eval_loss = "chamfer"
+config.val_compare = "<"
 
 config.log = Config()
 config.log.dir = Path("log_set_mnist")

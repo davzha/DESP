@@ -107,7 +107,7 @@ def main(cfg, pool=None):
     best_val_score = np.inf
     early_stopping_count = 0
 
-    val_compare = lambda c,b:c < b if cfg.val_compare == "less" else lambda c,b:c > b
+    val_compare = lambda c,b:c < b if cfg.val_compare == "<" else lambda c,b:c > b
 
     for epoch in range(cfg.num_epoch):
         time_print(f"\nEpoch {epoch} Training")

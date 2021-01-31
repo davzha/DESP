@@ -102,3 +102,9 @@ class DigitLoss(ApproxLoss):
         self.gran = self.examples.size(0) // 2
 
 
+def f1score(preds, targets):
+    set_eq = (targets.unsqueeze(0) == preds.unsqueeze(1)).all(2)
+    recall = set_eq.any(0).float().mean()
+    precision = set_eq.any(1).float().mean()
+    f1 = 2 * (precision * recall) / (precision + recall + 1e-6)
+    return f1, precision, recall
