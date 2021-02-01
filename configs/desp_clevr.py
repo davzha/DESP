@@ -65,6 +65,7 @@ config.set_enc.d_in = 5
 config.set_enc.d_hid = 512
 config.set_enc.d_out = 512
 config.set_enc.n_layers = 2
+config.set_enc.normalize = True
 
 config.estim = Config()
 config.estim.data_noise = True

@@ -16,7 +16,7 @@ config.device = "cuda"
 config.num_epoch = 30
 config.anomaly_detection = False
 config.n_process_pool = 0
-config.model = "desp_subset_outlier"
+config.model = "baseline_subset_outlier"
 config.early_stopping = 3
 config.val_compare = ">"
 
@@ -55,29 +55,15 @@ config.data.min_n_target = 1
 config.data.p_outliers = None
 config.data.download = False
 
-config.sample = Config()
-config.sample.T = 50
-config.sample.S = 50
-config.sample.eps = 0.1
-
-config.predict = Config()
-config.predict.T = 50
-config.predict.S = 40
-config.predict.eps = 0.1
-config.predict.k = 10
-
 config.img_enc = Config()
 config.img_enc.d_out = 128
 config.img_enc.model_file = Path("pretrained") / "resnet34_celeba_attributes.pth.tar"
 config.img_enc.freeze_resnet = True
 
-config.energy_fn = Config()
-config.energy_fn.d_x = 128
-config.energy_fn.d_y = 1
-config.energy_fn.d_hid = 256
-config.energy_fn.n_equiv = 2
-config.energy_fn.n_inv = 2
+config.ds = Config()
+config.ds.d_in = 128
+config.ds.d_hid = 256
+config.ds.d_out = 1
+config.ds.n_layers = 4
 
-config.estim = Config()
-config.estim.data_noise = True
-config.estim.eps_d = 0.2
+

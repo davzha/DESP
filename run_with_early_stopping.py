@@ -128,7 +128,7 @@ def main(cfg, pool=None):
                 "opt_state_dict": {k: v.state_dict() for k,v in model.optimizers.items()},
                 "cfg": cfg,
             },
-            is_best=val_score < best_val_score,
+            is_best=val_compare(val_score, best_val_score),
             directory=cfg.log.misc_dir,
             filename=filename)
         
@@ -142,7 +142,10 @@ def main(cfg, pool=None):
             break
     
     time_print("\nTest")
+    ckpt = torch.load(cfg.log.misc_dir / "model_best.pth.tar")
+    model.load_state_dict(ckpt["state_dict"])
     eval(cfg, test_loader, model, mode="test")
+    writer.close()
 
 
 if __name__ == "__main__":

@@ -51,8 +51,8 @@ class Model(nn.Module):
         e_p = self.energy_fn(noise_target, enc_x).mean()
         e_n = self.energy_fn(y_T, enc_x).mean()
 
-        card_p = (y_T[...,:3] > 0.015).all(2).sum(1).float()
-        card_t = (set[...,:3] > 0.015).all(2).sum(1).float()
+        card_p = (y_T > 0.015).all(2).sum(1).float()
+        card_t = (set > 0.015).all(2).sum(1).float()
         rmse = ((card_p - card_t) ** 2).mean(0).sqrt()
 
         loss = e_p - e_n

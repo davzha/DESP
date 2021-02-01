@@ -100,25 +100,20 @@ class DSEnergy(nn.Module):
 
 
 class FSEncoder(nn.Module):
-    def __init__(self, d_in, d_hid, d_out, n_layers):
+    def __init__(self, d_in, d_hid, d_out, n_layers, normalize=False):
         super().__init__()
         self.d_in = d_in
         self.d_hid = d_hid
         self.d_out = d_out
+        self.normalize = normalize
 
-        layers = []
-        for i in range(n_layers):
-            layers.append(nn.Linear(
-                d_in if i == 0 else d_hid, 
-                d_hid if i < n_layers - 1 else d_out))
-            if i < n_layers - 1:
-                layers.append(nn.ReLU(inplace=True))
-
-        self.mlp = nn.Sequential(*layers)
+        self.mlp = get_mlp(d_in, d_hid, d_out, n_layers)
         self.pool = FSPool(d_out, 20)
 
     def forward(self, x):
         x = self.mlp(x)
+        if self.normalize:
+            x = x / x.size(1)
         x = self.pool(x)
         return x
 
@@ -182,3 +177,26 @@ class PretrainedConvEncoder(nn.Module):
         x = self.layers(x)
         x = self.end(x.squeeze())
         return x.view(x.size(0), -1)
+
+
+class DSEquivariant(nn.Module):
+    def __init__(self, d_in, d_hid, d_out, n_layers):
+        super().__init__()
+        self.n_layers = n_layers
+
+        self.layers_e = nn.ModuleList([
+            nn.Linear(d_in if i == 0 else d_hid, d_out if i == n_layers-1 else d_hid) 
+                for i in range(n_layers)])
+        self.layers_s = nn.ModuleList([
+            nn.Linear(d_in if i == 0 else d_hid, d_out if i == n_layers-1 else d_hid) 
+                for i in range(n_layers)])
+
+    def forward(self, x):
+        for i in range(self.n_layers):
+            x = self.layers_e[i](x) + self.layers_s[i](x.mean(1, keepdim=True))
+            if i < self.n_layers-1:
+                x = F.leaky_relu(x)
+        
+        x = torch.sigmoid(x)
+        return x
+        
