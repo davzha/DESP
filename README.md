@@ -11,31 +11,31 @@ We offer two requirement files listing the **same** packages, for installation v
 
 ### Polygons
 ```
-python run.py -c desp_polygons.py
-python run.py -c baseline_polygons.py
+python run.py -c desp_polygons
+python run.py -c baseline_polygons
 ```
 
 ### Digits
 ```
-python run.py -c desp_digits.py
-python run.py -c baseline_digits.py
+python run.py -c desp_digits
+python run.py -c baseline_digits
 ```
 
 ### Set MNIST Auto-Encoding
 ```
-python run_with_early_stopping.py -c desp_mnist.py
+python run_with_early_stopping.py -c desp_mnist
 ```
 
 ### CLEVR Object Detection
 See [DSPN](https://github.com/Cyanogenoid/dspn) for instructions on settings up the CLEVR dataset. Adapt in the config file `configs/desp_clevr.py` the `config.data.base_path` variable accordingly.
 ```
-python run_with_early_stopping.py -c desp_clevr.py
+python run_with_early_stopping.py -c desp_clevr
 ```
 
 ### CelebA Subset Anomaly Detection
 ```
-python run_with_early_stopping.py -c desp_celeba.py
-python run_with_early_stopping.py -c baseline_celeba.py
+python run_with_early_stopping.py -c desp_celeba
+python run_with_early_stopping.py -c baseline_celeba
 ```
 
 ## Code Structure Overview
