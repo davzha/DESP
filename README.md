@@ -27,7 +27,7 @@ python run_with_early_stopping.py -c desp_mnist
 ```
 
 ### CLEVR Object Detection
-See [DSPN](https://github.com/Cyanogenoid/dspn) for instructions on settings up the CLEVR dataset. Adapt in the config file `configs/desp_clevr.py` the `config.data.base_path` variable accordingly.
+See [DSPN](https://github.com/Cyanogenoid/dspn) for instructions on setting up the CLEVR dataset. Adapt in the config file `configs/desp_clevr.py` the `config.data.base_path` variable accordingly.
 ```
 python run_with_early_stopping.py -c desp_clevr
 ```
